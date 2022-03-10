@@ -92,3 +92,5 @@ const BootcampSchema = new mongoose.Schema({
     },
     averageCost: Number
 })
+
+module.exports = mongoose.model('Bootcamp', BootcampSchema);

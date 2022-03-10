@@ -17,6 +17,9 @@ const app = express();
 
 //Middlewares
 
+// Body parser
+app.use(express.json());
+
 // app.use(logger)
 
 if(process.env.NODE_ENV==='development'){
