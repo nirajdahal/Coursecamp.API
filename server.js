@@ -2,6 +2,7 @@ const express = require('express');
 const dotenv = require('dotenv');
 const logger = require('./middlewares/logger')
 var morgan = require('morgan')
+const errorHandler = require('./middlewares/error')
 const connectDb = require('./config/db');
 //Route Files
 const bootcamps = require('./routes/bootcamps');
@@ -27,7 +28,7 @@ if(process.env.NODE_ENV==='development'){
 }
 
 app.use('/api/v1/bootcamps', bootcamps)
-
+app.use(errorHandler);
 
 
 

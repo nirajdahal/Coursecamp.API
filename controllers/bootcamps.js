@@ -1,5 +1,5 @@
 const Bootcamp = require('../models/Bootcamp')
-
+const ErrorResponse = require('../utils/errorResponse');
 
 //@desc      Get all bootcamps
 //@route     Get api/v1/bootcamps
@@ -15,52 +15,71 @@ exports.getBootcamps = async (req, res, next) => {
 //@access    Public
 exports.getBootcamp = async (req, res, next) => {
 
-    const bootcamp = await Bootcamp.findById(req.params.id)
+    try {
+        const bootcamp = await Bootcamp.findById(req.params.id)
 
-    if (!bootcamp) {
-        res.status(404).json({
-            success: false
+        if (!bootcamp) {
+            return next(
+                // new ErrorResponse("Bootcamp Not Found", 400)
+                error
+            )
+        }
+        res.status(200).json({
+            success: true,
+            data: bootcamp
         })
+    } catch (error) {
+        next(error)
     }
-    res.status(200).json({
-        success: true,
-        data: bootcamp
-    })
+
 }
 
 //@desc      Create Bootcamp
 //@route     Post api/v1/bootcamps
 //@access    Private
 exports.createBootcamp = async (req, res, next) => {
-    console.log(req.body)
+    try {
 
-    const bootcamp = await Bootcamp.create(req.body);
 
-    res.status(201).json({
-        success: true,
-        data: bootcamp
+        console.log(req.body)
 
-    })
+        const bootcamp = await Bootcamp.create(req.body);
+
+        res.status(201).json({
+            success: true,
+            data: bootcamp
+
+        })
+    }
+    catch (error) {
+            next(error);
+    }
 }
 
 //@desc      Update Bootcamp
 //@route     Put api/v1/bootcamps/:id
 //@access    Private
 exports.updateBootcamp = async (req, res, next) => {
-    const bootcamp = await Bootcamp.findByIdAndUpdate(req.params.id, req.body, {
-        new: true,
-        runValidators: true
-    });
-    console.log(bootcamp);
-    if (!bootcamp) {
-        return res.status(400).json({
-            success: false
+    try {
+        const bootcamp = await Bootcamp.findByIdAndUpdate(req.params.id, req.body, {
+            new: true,
+            runValidators: true
+        });
+
+        if (!bootcamp) {
+            return res.status(400).json({
+                success: false
+            })
+        }
+        res.status(201).json({
+            success: true,
+            data: bootcamp
         })
     }
-    res.status(201).json({
-        success: true,
-        data: bootcamp
-    })
+    catch (error) {
+        next(error);
+    }
+
 }
 
 //@desc      Delete Bootcamp
