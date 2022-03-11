@@ -7,6 +7,7 @@ const asyncHandler = require('../middlewares/asyncHandler')
 //@access    Public
 exports.getBootcamps = asyncHandler(async (req, res, next) => {
     const bootcamp = await Bootcamp.find();
+    console.log(process.env.GEOCODER_PROVIDER)
     res.status(200).json({ success: true, count: bootcamp.length, data: bootcamp })
 })
 
