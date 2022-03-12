@@ -13,7 +13,7 @@ exports.getBootcamps = asyncHandler(async (req, res, next) => {
     const reqQuery = { ...req.query };
     console.log(req.query);
 
-    const removeFields = ['select', 'sort', 'page', 'limit'];
+    const removeFields = ['select', 'sort', 'page', 'limit', 'search'];
 
     //Loopover remove fields and delete from req query
 
@@ -25,9 +25,25 @@ exports.getBootcamps = asyncHandler(async (req, res, next) => {
     //Modified qyery string
     queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, match => `$${match}`)
     console.log(queryStr)
+    
 
-    //Finding resource
-    query = Bootcamp.find(JSON.parse(queryStr));
+
+
+
+    //search
+    if (req.query.search) {
+        let parsedQuery = JSON.parse(queryStr);
+         parsed.$or = [
+            { name: { $regex: req.query.search, $options: 'i' } },
+            { description: { $regex: req.query.search, $options: 'i' } }
+        ]
+        //Finding resource
+        query = Bootcamp.find(parsedQuery);
+    }
+    else {
+        //Finding resource
+        query = Bootcamp.find(JSON.parse(queryStr));
+    }
 
 
     //Select fields
@@ -46,6 +62,7 @@ exports.getBootcamps = asyncHandler(async (req, res, next) => {
         query = quer.sort('-createdAt');
     }
 
+
     //Pagination
 
     const page = parseInt(req.query.page) || 1;
@@ -62,7 +79,7 @@ exports.getBootcamps = asyncHandler(async (req, res, next) => {
     if (endIndex < total) {
         pagination.next = {
             page: page + 1,
-            limit : limit
+            limit: limit
         }
     }
 
