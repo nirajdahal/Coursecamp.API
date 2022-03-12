@@ -1,2 +1,7 @@
 node_modules/
 config/config.env
+/obj
+/bin
+/.vs
+/Test.njsproj
+/Test.njsproj.user
